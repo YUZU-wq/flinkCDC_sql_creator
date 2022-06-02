@@ -1,0 +1,28 @@
+srcDb:
+  host:
+  port:
+  user:
+  password:
+  type:
+sinkDb:
+  host:
+  port:
+  user:
+  password:
+  type:
+outputDir:
+# !!!`database` `table` `schema` are case sensitive in `oracle`!!!
+tableRule:
+  - r1:
+      # pattern to match databases for setting properties
+      # !!! database should be a `whole instance(or pdb) name` but not a regex when it comes with an `oracle db` !!!
+      database:
+      # pattern to match tables for setting properties
+      table:
+      # `schema` only takes effect on `postgresql` and `oracle` and `sqlserver`
+      schema:
+config:
+  -   
+
+
+
