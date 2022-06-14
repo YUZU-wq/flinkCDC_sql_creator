@@ -1,28 +1,37 @@
 srcDb:
-  host:
-  port:
-  user:
-  password:
-  type:
+  host: 192.168.15.53
+  port: 3306
+  user: root
+  password: Jac@xxb202012
+  type: mysql
 sinkDb:
-  host:
-  port:
-  user:
-  password:
-  type:
-outputDir:
+  host: 192.168.15.53
+  port: 3306
+  user: root
+  password: Jac@xxb202012
+  type: mysql
+outputDir: ./result
 # !!!`database` `table` `schema` are case sensitive in `oracle`!!!
 tableRule:
-  - r1:
+  -
+      src:
       # pattern to match databases for setting properties
       # !!! database should be a `whole instance(or pdb) name` but not a regex when it comes with an `oracle db` !!!
-      database:
+        database: ^srm-procurementexecution$
       # pattern to match tables for setting properties
-      table:
+        table: ^v_poasn.*$
       # `schema` only takes effect on `postgresql` and `oracle` and `sqlserver`
-      schema:
+        schema:
+      sink:
+        # pattern to match databases for setting properties
+        # !!! database should be a `whole instance(or pdb) name` but not a regex when it comes with an `oracle db` !!!
+        database: ^srm-procurementexecution$
+        # pattern to match tables for setting properties
+        table: ^v_poasn.*$
+        # `schema` only takes effect on `postgresql` and `oracle` and `sqlserver`
+        schema:
 config:
-  -   
+  -  "'server-id' = '1128'"
 
 
 
