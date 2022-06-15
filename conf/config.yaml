@@ -1,14 +1,14 @@
 srcDb:
-  host: 192.168.15.53
+  host: 192.168.*.*
   port: 3306
   user: root
-  password: Jac@xxb202012
+  password: ******
   type: mysql
 sinkDb:
-  host: 192.168.15.53
+  host: 192.168.*.*
   port: 3306
   user: root
-  password: Jac@xxb202012
+  password: ******
   type: mysql
 outputDir: ./result
 # !!!`database` `table` `schema` are case sensitive in `oracle`!!!
@@ -17,17 +17,17 @@ tableRule:
       src:
       # pattern to match databases for setting properties
       # !!! database should be a `whole instance(or pdb) name` but not a regex when it comes with an `oracle db` !!!
-        database: ^srm-procurementexecution$
+        database: ^.*$
       # pattern to match tables for setting properties
-        table: ^v_poasn.*$
+        table: ^.*$
       # `schema` only takes effect on `postgresql` and `oracle` and `sqlserver`
         schema:
       sink:
         # pattern to match databases for setting properties
         # !!! database should be a `whole instance(or pdb) name` but not a regex when it comes with an `oracle db` !!!
-        database: ^srm-procurementexecution$
+        database: ^.*$
         # pattern to match tables for setting properties
-        table: ^v_poasn.*$
+        table: ^.*$
         # `schema` only takes effect on `postgresql` and `oracle` and `sqlserver`
         schema:
 config:
