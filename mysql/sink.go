@@ -72,7 +72,7 @@ func creatorSink(conf *domain.Config, db *gorm.DB, tables []string) map[string]s
 				a = a + "`" + message.ColumnName + "` " + mymap[message.DataType] + ",\n"
 			}
 			a = a + "PRIMARY KEY(`" + p + "`) NOT ENFORCED\n"
-			b := fmt.Sprintf(" 'connector' = 'jdbc',\n  'driver' = 'com.mysql.jdbc.Driver',\n  'url' = 'jdbc:mysql://%s:%s/%s?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%%2B8',\n  'username' = '%s',\n  'password' = '%s',\n  'table-name' = '%s'\n", conf.SinkDb.Host, conf.SinkDb.Port, database, conf.SinkDb.User, conf.SinkDb.Password, table)
+			b := fmt.Sprintf("'connector' = 'jdbc',\n'driver' = 'com.mysql.jdbc.Driver',\n'url' = 'jdbc:mysql://%s:%s/%s?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%%2B8',\n'username' = '%s',\n'password' = '%s',\n'table-name' = '%s'\n", conf.SinkDb.Host, conf.SinkDb.Port, database, conf.SinkDb.User, conf.SinkDb.Password, table)
 			m[t] = fmt.Sprintf("CREATE TABLE IF NOT EXISTS `default_catalog`.`%s`.`%s_sink`(\n%s) with (\n%s);\n", database, table, a, b)
 			wg.Done()
 		}()

@@ -93,9 +93,9 @@ func creatorSrc(conf *domain.Config, db *gorm.DB, tables []string) map[string]st
 				a = a + "`" + message.ColumnName + "` " + mymap[message.DataType] + ",\n"
 			}
 			a = a + "PRIMARY KEY(`" + p + "`) NOT ENFORCED\n"
-			b := fmt.Sprintf("'table-name' = '%s',\n  'connector' = 'mysql-cdc',\n  'hostname' = '%s',\n  'port' = '%s',\n  'username' = '%s',\n  'password' = '%s',\n  'database-name' = '%s'", table, conf.SrcDb.Host, conf.SrcDb.Port, conf.SrcDb.User, conf.SrcDb.Password, database)
+			b := fmt.Sprintf("'table-name' = '%s',\n'connector' = 'mysql-cdc',\n'hostname' = '%s',\n'port' = '%s',\n'username' = '%s',\n'password' = '%s',\n'database-name' = '%s'", table, conf.SrcDb.Host, conf.SrcDb.Port, conf.SrcDb.User, conf.SrcDb.Password, database)
 			for _, s := range conf.Config {
-				b = b + "," + s + "\n"
+				b = b + ",\n" + s + "\n"
 			}
 			m[t] = fmt.Sprintf("CREATE TABLE IF NOT EXISTS `default_catalog`.`%s`.`%s_src`(\n%s) with (\n%s);\n", database, table, a, b)
 			wg.Done()
