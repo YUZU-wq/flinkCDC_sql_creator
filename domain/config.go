@@ -42,6 +42,14 @@ type Rule struct {
 	Schema   string `yaml:"schema"`
 }
 
+type OracleTableMessage struct {
+	ColumnName    string
+	DataType      string
+	DataLength    int
+	DataPrecision int
+	DataScale     int
+}
+
 /*func (t TableMessage) create(dataBaseType string) string {
 	switch dataBaseType {
 	case "mysql":

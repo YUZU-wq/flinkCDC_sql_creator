@@ -5,6 +5,7 @@ import (
 	"flag"
 	"flinkCDC_sql_creator/domain"
 	"flinkCDC_sql_creator/mysql"
+	"flinkCDC_sql_creator/oracle"
 	"fmt"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
@@ -29,15 +30,18 @@ func main() {
 		return
 	}
 	mysql.InitMap()
-	var src map[string]string
-	var sink map[string]string
+	oracle.InitMap()
+	var src []string
+	var sink []string
 	go func() {
 		defer wg.Done()
 		switch c.SrcDb.Type {
 		case "mysql":
 			src = mysql.MysqlSrcCreator(&c)
 		case "oracle":
-			fmt.Println(2)
+			for _, rule := range c.TableRule {
+				src = append(src, oracle.OracleSrcCreator(&c, rule.Src.Database)...)
+			}
 		default:
 			fmt.Println(0)
 		}

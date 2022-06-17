@@ -10,7 +10,7 @@ import (
 	"sync"
 )
 
-func MysqlSinkCreator(conf *domain.Config) map[string]string {
+func MysqlSinkCreator(conf *domain.Config) []string {
 	timeout := "10s" //连接超时，10秒
 	//拼接下dsn参数, dsn格式可以参考上面的语法，这里使用Sprintf动态拼接dsn参数，因为一般数据库连接参数，我们都是保存在配置文件里面，需要从配置文件加载参数，然后拼接dsn。
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local&timeout=%s", conf.SinkDb.User, conf.SinkDb.Password, conf.SinkDb.Host, conf.SinkDb.Port, "information_schema", timeout)
@@ -48,13 +48,13 @@ func MysqlSinkCreator(conf *domain.Config) map[string]string {
 		}
 	}
 
-	return creatorSrc(conf, db, dbT)
+	return creatorSink(conf, db, dbT)
 
 }
 
-func creatorSink(conf *domain.Config, db *gorm.DB, tables []string) map[string]string {
+func creatorSink(conf *domain.Config, db *gorm.DB, tables []string) []string {
 	var wg sync.WaitGroup
-	m := make(map[string]string)
+	var m []string
 	for _, t := range tables {
 		wg.Add(1)
 		t := t
@@ -73,7 +73,7 @@ func creatorSink(conf *domain.Config, db *gorm.DB, tables []string) map[string]s
 			}
 			a = a + "PRIMARY KEY(`" + p + "`) NOT ENFORCED\n"
 			b := fmt.Sprintf("'connector' = 'jdbc',\n'driver' = 'com.mysql.jdbc.Driver',\n'url' = 'jdbc:mysql://%s:%s/%s?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%%2B8',\n'username' = '%s',\n'password' = '%s',\n'table-name' = '%s'\n", conf.SinkDb.Host, conf.SinkDb.Port, database, conf.SinkDb.User, conf.SinkDb.Password, table)
-			m[t] = fmt.Sprintf("CREATE TABLE IF NOT EXISTS `default_catalog`.`%s`.`%s_sink`(\n%s) with (\n%s);\n", database, table, a, b)
+			m = append(m, fmt.Sprintf("CREATE TABLE IF NOT EXISTS `default_catalog`.`%s`.`%s_sink`(\n%s) with (\n%s);\n", database, table, a, b))
 			wg.Done()
 		}()
 		wg.Wait()

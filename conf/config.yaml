@@ -1,9 +1,9 @@
 srcDb:
-  host: 192.168.15.53
-  port: 3306
-  user: root
-  password: Jac@xxb202012
-  type: mysql
+  host: 192.168.15.56
+  port: 1521
+  user: 'C##jacbomqk0721'
+  password: 'bomtest$6880'
+  type: oracle
 sinkDb:
   host: 192.168.15.53
   port: 3306
@@ -17,17 +17,17 @@ tableRule:
       src:
       # pattern to match databases for setting properties
       # !!! database should be a `whole instance(or pdb) name` but not a regex when it comes with an `oracle db` !!!
-        database: ^srm-procurementexecution$
+        database: orcl #^srm-procurementexecution$
       # pattern to match tables for setting properties
-        table: ^v_poasn.*$
+        table: ^UPDATELOG$
       # `schema` only takes effect on `postgresql` and `oracle` and `sqlserver`
-        schema:
+        schema: ^C##JACBOMQK0721$
       sink:
         # pattern to match databases for setting properties
         # !!! database should be a `whole instance(or pdb) name` but not a regex when it comes with an `oracle db` !!!
         database: ^srm-procurementexecution$
         # pattern to match tables for setting properties
-        table: ^v_poasn.*$
+        table: ^payablelist*$
         # `schema` only takes effect on `postgresql` and `oracle` and `sqlserver`
         schema:
 config:

@@ -31,7 +31,7 @@ func InitMap() {
 
 }
 
-func MysqlSrcCreator(conf *domain.Config) map[string]string {
+func MysqlSrcCreator(conf *domain.Config) []string {
 	timeout := "10s" //连接超时，10秒
 	//拼接下dsn参数, dsn格式可以参考上面的语法，这里使用Sprintf动态拼接dsn参数，因为一般数据库连接参数，我们都是保存在配置文件里面，需要从配置文件加载参数，然后拼接dsn。
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local&timeout=%s", conf.SrcDb.User, conf.SrcDb.Password, conf.SrcDb.Host, conf.SrcDb.Port, "information_schema", timeout)
@@ -69,13 +69,13 @@ func MysqlSrcCreator(conf *domain.Config) map[string]string {
 		}
 	}
 
-	return creatorSink(conf, db, dbT)
+	return creatorSrc(conf, db, dbT)
 
 }
 
-func creatorSrc(conf *domain.Config, db *gorm.DB, tables []string) map[string]string {
+func creatorSrc(conf *domain.Config, db *gorm.DB, tables []string) []string {
 	var wg sync.WaitGroup
-	m := make(map[string]string)
+	var m []string
 	for _, t := range tables {
 		wg.Add(1)
 		t := t
@@ -97,7 +97,7 @@ func creatorSrc(conf *domain.Config, db *gorm.DB, tables []string) map[string]st
 			for _, s := range conf.Config {
 				b = b + ",\n" + s + "\n"
 			}
-			m[t] = fmt.Sprintf("CREATE TABLE IF NOT EXISTS `default_catalog`.`%s`.`%s_src`(\n%s) with (\n%s);\n", database, table, a, b)
+			m = append(m, fmt.Sprintf("CREATE TABLE IF NOT EXISTS `default_catalog`.`%s`.`%s_src`(\n%s) with (\n%s);\n", database, table, a, b))
 			wg.Done()
 		}()
 		wg.Wait()
