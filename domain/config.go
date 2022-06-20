@@ -43,11 +43,11 @@ type Rule struct {
 }
 
 type OracleTableMessage struct {
-	ColumnName    string
-	DataType      string
-	DataLength    int
-	DataPrecision int
-	DataScale     int
+	ColumnName    string `gorm:"column:COLUMN_NAME"`
+	DataType      string `gorm:"column:DATA_TYPE"`
+	DataLength    int    `gorm:"column:DATA_LENGTH"`
+	DataPrecision int    `gorm:"column:DATA_PRECISION"`
+	DataScale     int    `gorm:"column:DATA_SCALE"`
 }
 
 /*func (t TableMessage) create(dataBaseType string) string {

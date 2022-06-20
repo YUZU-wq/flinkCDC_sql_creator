@@ -5,9 +5,13 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"log"
+	"os"
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 )
 
 func MysqlSinkCreator(conf *domain.Config) []string {
@@ -16,7 +20,14 @@ func MysqlSinkCreator(conf *domain.Config) []string {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local&timeout=%s", conf.SinkDb.User, conf.SinkDb.Password, conf.SinkDb.Host, conf.SinkDb.Port, "information_schema", timeout)
 	//连接MYSQL, 获得DB类型实例，用于后面的数据库读写操作。
 
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: logger.New(log.New(os.Stdout, "\r\n", log.LstdFlags), logger.Config{
+			SlowThreshold: 1 * time.Millisecond,
+			LogLevel:      logger.Warn,
+			Colorful:      true,
+		}),
+		//SkipDefaultTransaction: true,
+	})
 	if err != nil {
 		panic("连接数据库失败, error=" + err.Error())
 	}

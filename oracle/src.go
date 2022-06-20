@@ -8,10 +8,15 @@ import (
 	"gorm.io/gorm/logger"
 	"log"
 	"os"
+	"time"
+
+	//oracle "github.com/wdrabbit/gorm-oracle"
+	//"gorm.io/gorm"
+	//"gorm.io/gorm/logger"
+	_ "github.com/godror/godror"
 	"regexp"
 	"strings"
 	"sync"
-	"time"
 )
 
 var oraclemap = make(map[string]string)
@@ -39,11 +44,8 @@ func InitMap() {
 
 func OracleSrcCreator(conf *domain.Config, database string) []string {
 	//拼接下dsn参数, dsn格式可以参考上面的语法，这里使用Sprintf动态拼接dsn参数，因为一般数据库连接参数，我们都是保存在配置文件里面，需要从配置文件加载参数，然后拼接dsn。
-
-	s := "'" + conf.SrcDb.User + "/\"" + conf.SrcDb.Password + "\"'"
-	dsn := fmt.Sprintf("oracle://%s@%s:%s/%s", s /*conf.SrcDb.User, conf.SrcDb.Password,*/, conf.SrcDb.Host, conf.SrcDb.Port, database)
-	//连接MYSQL, 获得DB类型实例，用于后面的数据库读写操作。
-
+	s := conf.SrcDb.User + ":" + conf.SrcDb.Password
+	dsn := fmt.Sprintf("oracle://%s@%s:%s/%s", s, conf.SrcDb.Host, conf.SrcDb.Port, database)
 	db, err := gorm.Open(oracle.Open(dsn), &gorm.Config{
 		Logger: logger.New(log.New(os.Stdout, "\r\n", log.LstdFlags), logger.Config{
 			SlowThreshold: 1 * time.Millisecond,
@@ -53,19 +55,21 @@ func OracleSrcCreator(conf *domain.Config, database string) []string {
 		//SkipDefaultTransaction: true,
 	})
 	if err != nil {
-		panic("连接数据库失败, error=" + err.Error())
+		panic("连接数据库失败, error " + err.Error())
 	}
 	var schemas []string
 	var tables []string
 	var dbT []string
 	var wg sync.WaitGroup
 	//   查询 执行用Scan 和Find 一样
+	//db.Select(&schemas, "select USERNAME from sys.dba_users")
 	db = db.Raw("select USERNAME from sys.dba_users").Scan(&schemas)
 	for _, schema := range schemas {
 		for _, tableRule := range conf.TableRule {
 			matchResult, _ := regexp.MatchString(tableRule.Src.Schema, schema)
 			if matchResult {
 				tableSql := fmt.Sprintf("select TABLE_NAME from dba_tables where owner = '%s'", schema)
+				//db.Select(&tables, tableSql)
 				db = db.Raw(tableSql).Scan(&tables)
 				for _, table := range tables {
 					wg.Add(1)
@@ -97,7 +101,7 @@ func creatorSrc(database string, conf *domain.Config, db *gorm.DB, tables []stri
 			var pri string
 			var t1 []domain.OracleTableMessage
 			schema, table, _ := strings.Cut(t, ".")
-			db = db.Raw(fmt.Sprintf("select   constraint_name   from   user_constraints   where   constraint_type='P' and  TABLE_name=upper('%s');", table)).Scan(&pri)
+			db = db.Raw(fmt.Sprintf("select   constraint_name   from   user_constraints   where   constraint_type='P' and  TABLE_name='%s'", table)).Scan(&pri)
 			if pri == "" {
 				panic(fmt.Sprintf("表'%s'不存在主键！", table))
 			}
@@ -106,7 +110,6 @@ func creatorSrc(database string, conf *domain.Config, db *gorm.DB, tables []stri
 			a := ""
 			t := ""
 			for _, message := range t1 {
-				//todo 逻辑变更
 				if message.DataType == "NUMBER" {
 					t = numberTrans(message.ColumnName, message.DataLength, message.DataPrecision, message.DataScale)
 				} else {

@@ -43,16 +43,16 @@ func main() {
 				src = append(src, oracle.OracleSrcCreator(&c, rule.Src.Database)...)
 			}
 		default:
-			fmt.Println(0)
+			fmt.Println("未匹配的数据库类型，等待支持。")
 		}
 	}()
 	switch c.SinkDb.Type {
 	case "mysql":
 		sink = mysql.MysqlSinkCreator(&c)
 	case "oracle":
-		fmt.Println(2)
+		fmt.Println("flink-jdbc不支持oracle相关操作！")
 	default:
-		fmt.Println(0)
+		fmt.Println("未匹配的数据库类型，等待支持。")
 	}
 
 	//todo 进行类别判断 采用不同的生成方法
