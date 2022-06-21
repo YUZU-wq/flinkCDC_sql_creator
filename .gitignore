@@ -1,0 +1,9 @@
+FSC.exe
+.idea/flinkCDC_sql_creator.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/inspectionProfiles/Project_Default.xml
+conf/config.yaml
+result/create.sql
