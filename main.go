@@ -29,6 +29,8 @@ func main() {
 		log.Println("配置文件解析失败！")
 		return
 	}
+	c.SrcDb.Trans()
+	c.SinkDb.Trans()
 	mysql.InitMap()
 	oracle.InitMap()
 	var src []string
@@ -55,10 +57,6 @@ func main() {
 		fmt.Println("未匹配的数据库类型，等待支持。")
 	}
 
-	//todo 进行类别判断 采用不同的生成方法
-	/*mysql.InitMap()
-	src := mysql.MysqlSrcCreator(&c)
-	sink = mysql.MysqlSinkCreator(&c)*/
 	filePath := c.OutputDir + "/create.sql"
 	os.MkdirAll(c.OutputDir, os.ModeDir)
 	file, err := os.OpenFile(filePath, os.O_TRUNC|os.O_CREATE, 0666)

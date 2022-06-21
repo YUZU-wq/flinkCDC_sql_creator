@@ -8,15 +8,10 @@ import (
 	"gorm.io/gorm/logger"
 	"log"
 	"os"
-	"time"
-
-	//oracle "github.com/wdrabbit/gorm-oracle"
-	//"gorm.io/gorm"
-	//"gorm.io/gorm/logger"
-	_ "github.com/godror/godror"
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 )
 
 var oraclemap = make(map[string]string)

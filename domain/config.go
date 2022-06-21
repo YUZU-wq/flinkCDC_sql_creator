@@ -1,27 +1,21 @@
 package domain
 
+import "net/url"
+
 type Config struct {
-	SrcDb     SrcDb       `yaml:"srcDb"`
-	SinkDb    SinkDb      `yaml:"sinkDb"`
+	SrcDb     Db          `yaml:"srcDb"`
+	SinkDb    Db          `yaml:"sinkDb"`
 	OutputDir string      `yaml:"outputDir"`
 	TableRule []TableRule `yaml:"tableRule"`
 	Config    []string    `yaml:"config"`
 }
 
-type SrcDb struct {
+type Db struct {
 	Host     string `yaml:"host"`
 	Port     string `yaml:"port"`
 	User     string `yaml:"user"`
 	Password string `yaml:"password"`
 	Type     string `yaml:"type"`
-}
-
-type SinkDb struct {
-	User     string `yaml:"user"`
-	Password string `yaml:"password"`
-	Type     string `yaml:"type"`
-	Host     string `yaml:"host"`
-	Port     string `yaml:"port"`
 }
 
 type TableRule struct {
@@ -50,13 +44,7 @@ type OracleTableMessage struct {
 	DataScale     int    `gorm:"column:DATA_SCALE"`
 }
 
-/*func (t TableMessage) create(dataBaseType string) string {
-	switch dataBaseType {
-	case "mysql":
-		fmt.Println(1)
-	case "oracle":
-		fmt.Println(2)
-	default:
-		fmt.Println(0)
-	}
-}*/
+func (db Db) Trans() {
+	db.User = url.QueryEscape(db.User)
+	db.Password = url.QueryEscape(db.Password)
+}
