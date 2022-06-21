@@ -1,15 +1,15 @@
 srcDb:
-  host: 192.168.*.*
-  port: 3306
-  user: root
-  password: ******
-  type: mysql
+  host: 192.168.11.109
+  port: 1521
+  user: jacbomqk0418
+  password: tyinteplm
+  type: oracle
 sinkDb:
-  host: 192.168.*.*
-  port: 3306
-  user: root
-  password: ******
-  type: mysql
+  host: 192.168.16.56
+  port: 1521
+  user: C##jacbomqk0721
+  password: bomtest$6880
+  type: oracle
 outputDir: ./result
 # !!!`database` `table` `schema` are case sensitive in `oracle`!!!
 tableRule:
@@ -17,19 +17,19 @@ tableRule:
       src:
       # pattern to match databases for setting properties
       # !!! database should be a `whole instance(or pdb) name` but not a regex when it comes with an `oracle db` !!!
-        database: ^.*$
-      # pattern to match tables for setting properties
-        table: ^.*$
-      # `schema` only takes effect on `postgresql` and `oracle` and `sqlserver`
-        schema:
+        database: jacbomdb
+          # pattern to match tables for setting properties
+        table: ^CL_TYCLASSBAND$
+          # `schema` only takes effect on `postgresql` and `oracle` and `sqlserver`
+        schema: ^JACBOMQK0418$
       sink:
         # pattern to match databases for setting properties
         # !!! database should be a `whole instance(or pdb) name` but not a regex when it comes with an `oracle db` !!!
-        database: ^.*$
+        database: orcl
         # pattern to match tables for setting properties
-        table: ^.*$
+        table: ^BI_BATINPUTLOG$
         # `schema` only takes effect on `postgresql` and `oracle` and `sqlserver`
-        schema:
+        schema: ^C##JACBOMQK0721$
 config:
   -  "'server-id' = '1128'"
 
