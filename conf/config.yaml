@@ -1,14 +1,14 @@
 srcDb:
-  host: 192.168.11.109
+  host: 192.168.xx.xx
   port: 1521
-  user: jacbomqk0418
-  password: tyinteplm
+  user: xxx
+  password: xxx
   type: oracle
 sinkDb:
-  host: 192.168.16.56
+  host: x.x.x.x
   port: 1521
-  user: C##jacbomqk0721
-  password: bomtest$6880
+  user: xxxxx
+  password: xxxxx
   type: oracle
 outputDir: ./result
 # !!!`database` `table` `schema` are case sensitive in `oracle`!!!
@@ -17,19 +17,19 @@ tableRule:
       src:
       # pattern to match databases for setting properties
       # !!! database should be a `whole instance(or pdb) name` but not a regex when it comes with an `oracle db` !!!
-        database: jacbomdb
+        database: xxxxx
           # pattern to match tables for setting properties
-        table: ^CL_TYCLASSBAND$
+        table: ^xxxx$
           # `schema` only takes effect on `postgresql` and `oracle` and `sqlserver`
-        schema: ^JACBOMQK0418$
+        schema: ^xxxxxx$
       sink:
         # pattern to match databases for setting properties
         # !!! database should be a `whole instance(or pdb) name` but not a regex when it comes with an `oracle db` !!!
         database: orcl
         # pattern to match tables for setting properties
-        table: ^BI_BATINPUTLOG$
+        table: ^xxxx$
         # `schema` only takes effect on `postgresql` and `oracle` and `sqlserver`
-        schema: ^C##JACBOMQK0721$
+        schema: ^xxxxxx$
 config:
   -  "'server-id' = '1128'"
 
